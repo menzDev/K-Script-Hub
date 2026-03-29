@@ -1,60 +1,53 @@
-local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
 
-local Window = Rayfield:CreateWindow({
-   Name = "K-Script-Hub",
-   LoadingTitle = "K-Script-Hub Loading...",
-   LoadingSubtitle = "by menzDev",
-   ConfigurationSaving = {
-      Enabled = true,
-      FolderName = nil, 
-      FileName = "KScriptHub"
-   },
-   Discord = {
-      Enabled = false,
-      Invite = "noinvitelink", 
-      RememberJoins = true 
-   },
-   KeySystem = false 
+local Window = OrionLib:MakeWindow({Name = "K-Script-Hub", HidePremium = false, SaveConfig = false, IntroText = "K-Script-Hub by menzDev"})
+
+local NdzTab = Window:MakeTab({
+	Name = "Natural Disaster",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
 })
 
-local NdzTab = Window:CreateTab("Natural Disaster", nil)
-local JjsTab = Window:CreateTab("Jujutsu Shenanigans", nil)
-local FpsTab = Window:CreateTab("FPS Script", nil)
-
-NdzTab:CreateSection("Scripts de NDS")
-
-NdzTab:CreateButton({
-   Name = "Cargar John Doe NDS",
-   Callback = function()
-      loadstring(game:HttpGet("https://raw.githubusercontent.com/menzDev/K-Script-Hub/main/scripts/john_doe_nds.lua"))()
-   end,
+NdzTab:AddButton({
+	Name = "Cargar John Doe NDS",
+	Callback = function()
+      		loadstring(game:HttpGet("https://raw.githubusercontent.com/menzDev/K-Script-Hub/main/scripts/john_doe_nds.lua"))()
+  	end    
 })
 
-NdzTab:CreateButton({
-   Name = "Cargar NDS Script (General)",
-   Callback = function()
-      loadstring(game:HttpGet("https://raw.githubusercontent.com/menzDev/K-Script-Hub/main/scripts/nds_script.lua"))()
-   end,
+NdzTab:AddButton({
+	Name = "Cargar NDS Script (General)",
+	Callback = function()
+      		loadstring(game:HttpGet("https://raw.githubusercontent.com/menzDev/K-Script-Hub/main/scripts/nds_script.lua"))()
+  	end    
 })
 
 
-JjsTab:CreateSection("Scripts de JJS")
+local JjsTab = Window:MakeTab({
+	Name = "Jujutsu Shenanigans",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
 
-JjsTab:CreateButton({
-   Name = "Cargar JJS Script",
-   Callback = function()
-      loadstring(game:HttpGet("https://raw.githubusercontent.com/menzDev/K-Script-Hub/main/scripts/jjs_script.lua"))()
-   end,
+JjsTab:AddButton({
+	Name = "Cargar JJS Script",
+	Callback = function()
+      		loadstring(game:HttpGet("https://raw.githubusercontent.com/menzDev/K-Script-Hub/main/scripts/jjs_script.lua"))()
+  	end    
 })
 
 
-FpsTab:CreateSection("Scripts para Shooters")
-
-FpsTab:CreateButton({
-   Name = "Cargar Aimbot/ESP (FPS)",
-   Callback = function()
-      loadstring(game:HttpGet("https://raw.githubusercontent.com/menzDev/K-Script-Hub/main/scripts/fps_script.lua"))()
-   end,
+local FpsTab = Window:MakeTab({
+	Name = "FPS Script",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
 })
 
-Rayfield:LoadConfiguration()
+FpsTab:AddButton({
+	Name = "Cargar Aimbot/ESP (FPS)",
+	Callback = function()
+      		loadstring(game:HttpGet("https://raw.githubusercontent.com/menzDev/K-Script-Hub/main/scripts/fps_script.lua"))()
+  	end    
+})
+
+OrionLib:Init()
