@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K Script Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-theme">
+    <div class="app-shell" id="app-shell">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i data-lucide="zap" class="accent-text logo-icon"></i>
+                    <span id="nav-title">K Script Hub</span>
+                </div>
+                <button class="icon-btn" title="Toggle Layout" onclick="toggleLayout()"><i data-lucide="layout-grid"></i></button>
+            </div>
+
+            <div class="sidebar-content custom-scrollbar">
+                <!-- Search -->
+                <div class="search-container">
+                    <div class="search-input-wrapper">
+                        <i data-lucide="search"></i>
+                        <input type="text" id="script-search" placeholder="Buscar scripts..." oninput="filterScripts()">
+                    </div>
+                </div>
+
+                <!-- My Scripts Section -->
+                <section class="sidebar-section expanded" id="my-scripts-section">
+                    <div class="section-header">
+                        <div class="title-group" onclick="toggleSection('my-scripts-section')">
+                            <i data-lucide="folder"></i>
+                            <span>MIS SCRIPTS</span>
+                            <i data-lucide="chevron-down" class="chevron"></i>
+                        </div>
+                        <i data-lucide="plus" class="add-btn" onclick="addNewScript()"></i>
+                    </div>
+                    <div class="section-items" id="my-scripts-list">
+                        <!-- Scripts del usuario -->
+                    </div>
+                </section>
+
+                <!-- Online Hub Section -->
+                <section class="sidebar-section expanded" id="online-section">
+                    <div class="section-header">
+                        <div class="title-group" onclick="toggleSection('online-section')">
+                            <i data-lucide="cloud"></i>
+                            <span>ONLINE HUB</span>
+                            <i data-lucide="chevron-down" class="chevron"></i>
+                        </div>
+                        <i data-lucide="plus" class="add-btn" onclick="addOnlineScript()"></i>
+                    </div>
+                    <div class="section-items" id="online-scripts-list">
+                        <!-- Scripts online -->
+                    </div>
+                </section>
+
+                <!-- Categories Section -->
+                <section class="sidebar-section expanded" id="categories-section">
+                    <div class="section-header">
+                        <div class="title-group" onclick="toggleSection('categories-section')">
+                            <i data-lucide="grid-3x3"></i>
+                            <span>POR JUEGO</span>
+                            <i data-lucide="chevron-down" class="chevron"></i>
+                        </div>
+                    </div>
+                    <div class="section-items" id="categories-list">
+                        <!-- Categorías -->
+                    </div>
+                </section>
+            </div>
+
+            <!-- Sidebar Footer -->
+            <div class="sidebar-footer">
+                <div class="executor-status">
+                    <i data-lucide="cpu"></i>
+                    <span>Executor: <strong id="executor-name">No detectado</strong></span>
+                </div>
+                <button class="settings-btn" onclick="openSettings()">
+                    <i data-lucide="settings"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="script-info">
+                    <i data-lucide="file-code"></i>
+                    <span id="current-script-name">Selecciona un script</span>
+                </div>
+                <div class="top-bar-actions">
+                    <button class="action-btn secondary" onclick="copyScript()" id="copy-btn" disabled>
+                        <i data-lucide="clipboard"></i>
+                        <span>Copiar</span>
+                    </button>
+                    <button class="action-btn primary" onclick="executeScript()" id="execute-btn" disabled>
+                        <i data-lucide="play"></i>
+                        <span>Ejecutar</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Script Preview -->
+            <div class="script-preview-container">
+                <div class="preview-header">
+                    <div class="preview-tabs">
+                        <button class="preview-tab active" onclick="switchTab('preview')">
+                            <i data-lucide="eye"></i>
+                            Vista Previa
+                        </button>
+                        <button class="preview-tab" onclick="switchTab('code')">
+                            <i data-lucide="code"></i>
+                            Código
+                        </button>
+                    </div>
+                    <div class="preview-info">
+                        <span class="script-category-badge" id="script-category">Universal</span>
+                        <span class="script-lines" id="script-lines">0 líneas</span>
+                    </div>
+                </div>
+
+                <!-- Preview Mode -->
+                <div class="preview-content" id="preview-tab">
+                    <div class="empty-state" id="empty-state">
+                        <i data-lucide="mouse-pointer-click"></i>
+                        <h3>Haz click en un script</h3>
+                        <p>Selecciona un script de la lista para ver su contenido</p>
+                    </div>
+                    <div class="script-details" id="script-details" style="display: none;">
+                        <div class="script-description">
+                            <h2 id="script-title">Nombre del Script</h2>
+                            <p id="script-desc">Descripción del script</p>
+                        </div>
+                        <div class="script-features">
+                            <h4>Características:</h4>
+                            <ul id="script-features-list">
+                                <!-- Features dinámicas -->
+                            </ul>
+                        </div>
+                        <div class="script-game">
+                            <i data-lucide="gamepad-2"></i>
+                            <span id="script-game-name">Universal</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Code Mode -->
+                <div class="code-content" id="code-tab" style="display: none;">
+                    <div class="code-editor-container">
+                        <div class="code-gutter" id="code-gutter"></div>
+                        <pre class="code-display"><code id="script-code-display">-- Selecciona un script para ver el código</code></pre>
+                    </div>
+                </div>
+
+                <!-- Online Scripts View -->
+                <div class="online-content" id="online-tab" style="display: none;">
+                    <div class="online-grid" id="online-grid">
+                        <!-- Online scripts cards -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Status -->
+            <div class="bottom-status">
+                <div class="status-left">
+                    <span class="status-item">
+                        <i data-lucide="file-text"></i>
+                        Scripts: <strong id="total-scripts">0</strong>
+                    </span>
+                    <span class="status-item">
+                        <i data-lucide="folder"></i>
+                        Categorías: <strong id="total-categories">0</strong>
+                    </span>
+                </div>
+                <div class="status-right">
+                    <span class="version">v1.0.0</span>
+                </div>
+            </div>
+        </main>
+
+        <!-- Right Nav -->
+        <nav class="right-nav">
+            <button class="nav-item active" id="nav-home" onclick="setActiveNav('home')">
+                <i data-lucide="folder-open"></i>
+            </button>
+            <button class="nav-item" id="nav-online" onclick="setActiveNav('online')">
+                <i data-lucide="cloud"></i>
+            </button>
+            <div class="nav-spacer"></div>
+            <button class="nav-item" id="nav-info" onclick="showInfo()">
+                <i data-lucide="info"></i>
+            </button>
+        </nav>
+
+        <!-- Settings Panel -->
+        <div class="settings-overlay" id="settings-overlay" onclick="closeSettings()"></div>
+        <div class="settings-panel" id="settings-panel">
+            <header class="settings-header">
+                <div class="title">
+                    <i data-lucide="settings" class="accent-text"></i>
+                    <span>Configuración</span>
+                </div>
+                <i data-lucide="x" class="close-btn" onclick="closeSettings()"></i>
+            </header>
+
+            <div class="settings-content custom-scrollbar">
+                <div class="settings-group">
+                    <label class="group-label"><i data-lucide="palette"></i> APARIENCIA</label>
+                    <div class="accent-grid">
+                        <button class="accent-btn purple active" data-accent="purple"><div class="dot"></div></button>
+                        <button class="accent-btn blue" data-accent="blue"><div class="dot"></div></button>
+                        <button class="accent-btn green" data-accent="green"><div class="dot"></div></button>
+                        <button class="accent-btn red" data-accent="red"><div class="dot"></div></button>
+                        <button class="accent-btn orange" data-accent="orange"><div class="dot"></div></button>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <label class="group-label"><i data-lucide="type"></i> TIPOGRAFÍA</label>
+                    <div class="segmented-control">
+                        <button class="control-btn" data-font="small">Small</button>
+                        <button class="control-btn active" data-font="medium">Medium</button>
+                        <button class="control-btn" data-font="large">Large</button>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <label class="group-label"><i data-lucide="layout"></i> DISEÑO</label>
+                    <div class="toggle-control" onclick="toggleCompact()">
+                        <span>Modo compacto</span>
+                        <div class="toggle-switch" id="compact-toggle"></div>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <label class="group-label"><i data-lucide="clipboard"></i> PORTAPAPELES</label>
+                    <div class="toggle-control active" onclick="toggleAutoCopy()">
+                        <span>Auto-copiar al seleccionar</span>
+                        <div class="toggle-switch" id="autocopy-toggle"></div>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="settings-footer">
+                K Script Hub v1.0.0 • 2026
+            </footer>
+        </div>
+
+        <!-- Toast Notification -->
+        <div class="toast-container" id="toast-container"></div>
+
+        <!-- URL Modal -->
+        <div class="url-modal" id="url-modal">
+            <div class="url-modal-content">
+                <div class="url-modal-header">
+                    <h3><i data-lucide="link"></i> Agregar Script Online</h3>
+                    <button class="url-modal-close" onclick="closeUrlModal()">
+                        <i data-lucide="x"></i>
+                    </button>
+                </div>
+                <div class="url-modal-body">
+                    <div class="url-input-group">
+                        <label>Nombre del Script</label>
+                        <input type="text" id="url-name" placeholder="Mi Script Awesome">
+                    </div>
+                    <div class="url-input-group">
+                        <label>URL del Script (raw)</label>
+                        <input type="text" id="url-input" placeholder="https://raw.githubusercontent.com/..." oninput="updateUrlPreview()">
+                    </div>
+                    <div class="url-input-group">
+                        <label>Juego</label>
+                        <input type="text" id="url-game" placeholder="Universal">
+                    </div>
+                    <div class="url-preview" id="url-preview">
+                        loadstring(game:HttpGet("URL"))()
+                    </div>
+                </div>
+                <div class="url-modal-footer">
+                    <button class="url-modal-btn cancel" onclick="closeUrlModal()">
+                        <i data-lucide="x"></i>
+                        Cancelar
+                    </button>
+                    <button class="url-modal-btn add" onclick="addOnlineScriptConfirm()">
+                        <i data-lucide="plus"></i>
+                        Agregar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
